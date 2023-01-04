@@ -1,0 +1,551 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Terminale NSI : Le problème du producteur et du consommateur &#8212; My Jupyter Book</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint single-page" id="site-navigation">
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/producteur_consommateur.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/producteur_consommateur.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#modele-elementaire">
+   Modèle élémentaire
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#base">
+     Base
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#temporisation">
+     Temporisation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#verrouillage-en-lecture-ecriture">
+     Verrouillage en lecture-écriture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#synchronisation-des-threads">
+   Synchronisation des threads
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#position-du-probleme">
+     Position du problème
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#utilisation-d-un-verrou-de-synchronisation">
+     Utilisation d’un verrou de synchronisation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#perfectionnement">
+     Perfectionnement
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exercices">
+   Exercices
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exercice-1">
+     Exercice 1
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exercice-2">
+     Exercice 2
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Terminale NSI : Le problème du producteur et du consommateur</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#modele-elementaire">
+   Modèle élémentaire
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#base">
+     Base
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#temporisation">
+     Temporisation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#verrouillage-en-lecture-ecriture">
+     Verrouillage en lecture-écriture
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#synchronisation-des-threads">
+   Synchronisation des threads
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#position-du-probleme">
+     Position du problème
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#utilisation-d-un-verrou-de-synchronisation">
+     Utilisation d’un verrou de synchronisation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#perfectionnement">
+     Perfectionnement
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exercices">
+   Exercices
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exercice-1">
+     Exercice 1
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exercice-2">
+     Exercice 2
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="terminale-nsi-le-probleme-du-producteur-et-du-consommateur">
+<h1>Terminale NSI : Le problème du producteur et du consommateur<a class="headerlink" href="#terminale-nsi-le-probleme-du-producteur-et-du-consommateur" title="Permalink to this headline">#</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h2>
+<p>Dans ce problème classique de programmation concurrente on considère 3 éléments :</p>
+<ul class="simple">
+<li><p>Un tampon de stockage (<em>buffer</em>) dans lequel on peut écrire, lire ou supprimer des données.</p></li>
+<li><p>Un producteur, qui est un <em>thread</em> qui écrit des données dans le tampon tant qu’il n’est pas plein.</p></li>
+<li><p>Un consommateur, qui est un <em>thread</em> qui lit et supprimme des données du tampon.</p></li>
+</ul>
+<p>Il est important de noter que le producteur et le consommateur sont des <em>threads</em> et n’interviennent donc pas de façon synchronisée.<br>
+<br></p>
+<p><img alt="" src="_images/producer-consumer.png" /></p>
+<br></section>
+<section id="modele-elementaire">
+<h2>Modèle élémentaire<a class="headerlink" href="#modele-elementaire" title="Permalink to this headline">#</a></h2>
+<section id="base">
+<h3>Base<a class="headerlink" href="#base" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Le tampon est une liste python partagée comme variable globale.</p></li>
+<li><p>Le producteur est une fonction qui écrit dans le tampon des nombres entiers aléatoires. Cette fonction admet un paramètre qui est la taille maximale du tampon. A chaque écriture le tampon est affiché</p></li>
+<li><p>Le consommateur est une fonction qui supprimme et affiche le dernier élément du tampon, sauf si il est vide.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+
+<span class="k">def</span> <span class="nf">producteur</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="s2">&quot;A compléter&quot;</span>
+    <span class="k">global</span> <span class="n">tampon</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">consommateur</span><span class="p">():</span>
+    <span class="s2">&quot;A compléter&quot;</span>
+    <span class="k">global</span> <span class="n">tampon</span>
+    <span class="k">pass</span>
+
+<span class="n">tampon</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">produit</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">producteur</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">consomme</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">consommateur</span><span class="p">)</span>
+<span class="n">produit</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">consomme</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="temporisation">
+<h3>Temporisation<a class="headerlink" href="#temporisation" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Améliorer le résultat en ajoutant une pause ( <em>sleep</em> ) dans chaque thread.</p></li>
+<li><p>Étudier l’influence des temps de pause sur la taille du tampon</p></li>
+<li><p>Simuler un situation plus réaliste avec des temps de pause aléatoires.</p></li>
+</ul>
+</section>
+<section id="verrouillage-en-lecture-ecriture">
+<h3>Verrouillage en lecture-écriture<a class="headerlink" href="#verrouillage-en-lecture-ecriture" title="Permalink to this headline">#</a></h3>
+<p>Avec le programme actuel il est possible que les deux threads interviennent en même temps sur le tampon, provoquant un résultat incohérent.<br>
+Corriger ce problème en utilisant un verrou global <em>operation</em> autour des opérations de lecture-écriture sur le tampon.</p>
+</section>
+</section>
+<section id="synchronisation-des-threads">
+<h2>Synchronisation des threads<a class="headerlink" href="#synchronisation-des-threads" title="Permalink to this headline">#</a></h2>
+<section id="position-du-probleme">
+<h3>Position du problème<a class="headerlink" href="#position-du-probleme" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Avec le programme actuel les deux threads exécutent une boucle infinie en vérifiant à chaque fois si il est possible d’écrire ou de lire sur le tampon.<br></p></li>
+<li><p>Si par exemple le tampon est plein le producteur utilise tout son temps de CPU à vérifier qu’il est toujours plein.<br></p></li>
+<li><p>C’est la situation d’attente active ( <em>busy-wait</em>).</p></li>
+<li><p>L’inconvénient est de consommer du temps de CPU à la place d’être en sommeil.</p></li>
+</ul>
+</section>
+<section id="utilisation-d-un-verrou-de-synchronisation">
+<h3>Utilisation d’un verrou de synchronisation<a class="headerlink" href="#utilisation-d-un-verrou-de-synchronisation" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>On va utiliser un verrou <em>plein</em> pour signifier que le tampon est plein.</p></li>
+<li><p>Le producteur tentera d’abord d’acquérir le verrou <em>plein</em>. <br></p>
+<ul>
+<li><p>Si il y parvient c’est que le tampon n’est pas plein. Il peut alors écrire et relâcher ou non le verrou ( selon que le tampon est plein ou pas ).</p></li>
+<li><p>Si il n’y parvient pas c’est que le tampon est plein et il reste en attente sans consommer de temps CPU.</p></li>
+</ul>
+</li>
+<li><p>Le consommateur testera le verrou <em>plein</em> à chaque itération. Si il est verrouillé il sera alors relâché.</p></li>
+</ul>
+<p>Modifier le programme précédent pour implémenter cette technique.</p>
+</section>
+<section id="perfectionnement">
+<h3>Perfectionnement<a class="headerlink" href="#perfectionnement" title="Permalink to this headline">#</a></h3>
+<p>Adapter la méthode précédente avec un verrou <em>vide</em> pour éviter l’état d’attente active du consommateur lorsque le tampon est vide.</p>
+</section>
+</section>
+<section id="exercices">
+<h2>Exercices<a class="headerlink" href="#exercices" title="Permalink to this headline">#</a></h2>
+<section id="exercice-1">
+<h3>Exercice 1<a class="headerlink" href="#exercice-1" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>On suppose maintenant que le consommateur ne peut consommer que lorsque le tampon est plein.</p></li>
+<li><p>Le consommateur vide alors entièrement le tampon.</p></li>
+<li><p>Adapter le programme précédent en synchronisant 2 threads qui réalisent cette situation.</p></li>
+</ul>
+</section>
+<section id="exercice-2">
+<h3>Exercice 2<a class="headerlink" href="#exercice-2" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Un thread écrit les nombres entiers consécutifs dans une variable globale.</p></li>
+<li><p>Un thread affiche en boucle la valeur de cette variable globale.</p></li>
+<li><p>Synchroniser les deux threads pour que chaque nombre soit affiché une fois et une seule.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By The Jupyter Book community<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
